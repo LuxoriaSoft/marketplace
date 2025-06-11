@@ -1,4 +1,4 @@
-name: Luxoria Standard Modules Release
+name: Marketplace Module Builder
 
 on:
   push:
@@ -63,12 +63,12 @@ jobs:
       # Install Poetry project dependencies
       - name: Install Marketplace Manager Dependencies
         run: poetry install
-        working-directory: ./tools/luxmktplacemgr
+        working-directory: .tools/luxmktplacemgr
 
       # Run build
       - name: Build modules
-        run: poetry run build ${{ matrix.platform }} .
-        working-directory: ./Modules
+        run: poetry run build ${{ matrix.platform }} ../../Modules
+        working-directory: .tools/luxmktplacemgr
 
       # # Build, rename, and upload LuxImport module
       # - name: Build LuxImport
