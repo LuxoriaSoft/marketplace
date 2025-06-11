@@ -59,7 +59,7 @@ The marketplace is built to empower photographers and developers alike:
 
 ## 📄 License
 
-Luxoria Marketplace is open-source and licensed under the [Apache 2.0 License](LICENSE).
+Luxoria Marketplace is open-source and licensed under the [Apache 2.0 License](LICENSE.md).
 
 ---
 
