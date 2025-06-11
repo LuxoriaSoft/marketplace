@@ -62,12 +62,12 @@ jobs:
 
       # Install Poetry project dependencies
       - name: Install Marketplace Manager Dependencies
-        run: poetry install
+        run: C:\Users\runneradmin\.local\bin\poetry install
         working-directory: ./.tools/luxmktplacemgr
 
       # Run build
       - name: Build modules
-        run: poetry run build ${{ matrix.platform }} ../../Modules
+        run: C:\Users\runneradmin\.local\bin\poetry run build ${{ matrix.platform }} ../../Modules
         working-directory: ./.tools/luxmktplacemgr
 
       # # Build, rename, and upload LuxImport module
