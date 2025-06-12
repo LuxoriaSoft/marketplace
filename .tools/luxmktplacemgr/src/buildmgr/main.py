@@ -89,7 +89,7 @@ class BuildSystem:
         
         self.log(f"Renaming DLL in {pdir}")
         os.rename(os.path.join(pdir, self.file_data["build"]["dll"]), self.file_data["build"]["dll"].replace(".dll", ".Lux.dll"))
-        shutil.copytree(pdir, os.path.join(output, self.file_data["name"]))
+        shutil.copytree(pdir, os.path.join(output, f"{self.file_data["name"]}.{self.arch}"))
 
 class ModuleBuilder:
     def __init__(self, dir, arch, platform, output_dir):
@@ -129,7 +129,12 @@ def main(args=sys.argv):
         exit(ERR_PLATFORM_NOT_SUPPORTED)
 
     dir = args[2]
-    output_dir = tempfile.mkdtemp(prefix="lux")
+    output_dir = "out"
+
+    if os.path.exists(output_dir) == False:
+        print(f"Creating directory : {output_dir}...")
+        os.mkdir(output_dir)
+
     print(f"Saving builds in {output_dir}...")
     
     mbuilder = ModuleBuilder(dir, arch, platform, output_dir)
