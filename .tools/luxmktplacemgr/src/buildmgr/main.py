@@ -77,6 +77,8 @@ class BuildSystem:
             f.close()
         except subprocess.CalledProcessError as e:
             self.log(f"err: executing command: {e}")
+            return 1
+        return 0
     
     def prepare_export(self, output):
         """Renames dll from Name.dll to Name.Lux.dll & Moves bin folder to target folder (output)"""
@@ -95,6 +97,7 @@ class ModuleBuilder:
 
         self.arch = arch
         self.platform = platform
+        self.dir = dir
         self.output_dir = output_dir
 
         # Fetch every folder in dir
@@ -102,13 +105,13 @@ class ModuleBuilder:
 
     def build_all(self):
         for module_dir in self.dirs:
-            path = os.path.join(dir, module_dir)
+            path = os.path.join(self.dir, module_dir)
             luxmodjson_path = os.path.join(path, LUXMOD_FILENAME)
             if os.path.exists(luxmodjson_path):
                 print("[*]Building [{}] \t => \t ...".format(module_dir))
                 module_builder = BuildSystem(path, self.arch, self.platform)
-                module_builder.build()
-                module_builder.prepare_export(self.output_dir)
+                if module_builder.build() == 0:
+                    module_builder.prepare_export(self.output_dir)
             else:
                 print("[ ]Skipping [{}] \t => \t err: {} is missing.".format(module_dir, LUXMOD_FILENAME))
 
@@ -132,7 +135,7 @@ def main(args=sys.argv):
     mbuilder = ModuleBuilder(dir, arch, platform, output_dir)
     mbuilder.build_all()
 
-    os.command(f"ls {output_dir}")
+    os.system(f"ls {output_dir}")
 
 if __name__ == '__main__':
     main()
