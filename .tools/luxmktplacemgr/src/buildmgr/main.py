@@ -97,9 +97,11 @@ class BuildSystem:
 
         self.log(f"Creating folder {out_dir}")
         os.mkdir(out_dir)
-        self.log(f"Copying Publish dir {pdir}")
+        print(os.listdir(pdir))
+
+        self.log(f"Copying dir (1/2) {pdir} to {out_dir}")
         shutil.copytree(pdir, out_dir)
-        self.log(f"Copying Graphical dir {gdir}")
+        self.log(f"Copying dir (2/2) {gdir} to {out_dir}")
         shutil.copytree(gdir, out_dir)
 
 class ModuleBuilder:
