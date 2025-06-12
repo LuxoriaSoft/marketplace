@@ -100,9 +100,9 @@ class BuildSystem:
         print(os.listdir(pdir))
 
         self.log(f"Copying dir (1/2) {pdir} to {out_dir}")
-        shutil.copytree(pdir, out_dir)
+        shutil.copytree(os.path.join(pdir, f"{self.file_data["name"]}.{self.arch}"), out_dir)
         self.log(f"Copying dir (2/2) {gdir} to {out_dir}")
-        shutil.copytree(gdir, out_dir)
+        shutil.copytree(os.path.join(gdir, self.file_data["name"]), out_dir)
 
 class ModuleBuilder:
     def __init__(self, dir, arch, platform, output_dir):
