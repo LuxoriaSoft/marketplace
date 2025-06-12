@@ -85,7 +85,7 @@ class BuildSystem:
         framework = self.file_data["build"]["targetFramework"]
         config = self.file_data["build"]["config"]
         platform = self.platform
-        pdir = os.path.join(self.dir, self.file_data["build"]["bin"], config, framework, platform)
+        pdir = os.path.join(self.dir, self.file_data["build"]["bin"], config, framework, platform, "publish")
         
         self.log(f"Renaming DLL in {pdir}")
         os.rename(os.path.join(pdir, self.file_data["build"]["dll"]), self.file_data["build"]["dll"].replace(".dll", ".Lux.dll"))
