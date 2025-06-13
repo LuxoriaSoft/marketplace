@@ -22,7 +22,7 @@ jobs:
           path: ./artifacts
       
       - name: Create output directory
-        run: mkdir -p ./out
+        run: mkdir -p out
 
       - name: Create ZIP files for each subfolder in Modules-win-*
         run: |
@@ -31,13 +31,13 @@ jobs:
             for sub_dir in "$platform_dir"/*; do
               if [ -d "$sub_dir" ]; then
                 sub_name=$(basename "$sub_dir")
-                zip -r "./out/${sub_name}.zip" "$sub_dir"
+                zip -r "out/${sub_name}.zip" "$sub_dir"
               fi
             done
           done
       
       - name: LS out
-        run: ls ./out
+        run: ls out
       
       - name: LS artifacts
         run: ls ./artifacts
@@ -67,7 +67,7 @@ jobs:
         with:
           tag_name: ${{ env.TAG_NAME }}
           name: ${{ env.TAG_NAME }}
-          files: ./out/**.zip
+          files: out/**.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
