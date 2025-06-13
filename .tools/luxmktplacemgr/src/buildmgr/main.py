@@ -90,8 +90,10 @@ class BuildSystem:
         gdir = os.path.join(root_path, self.file_data["build"]["dll"].replace(".dll", ""))
         pdir = os.path.join(root_path, "publish")
         
-        self.log(f"Renaming DLL in {pdir}")
-        #os.rename(os.path.join(pdir, self.file_data["build"]["dll"]), self.file_data["build"]["dll"].replace(".dll", ".Lux.dll"))
+        odll_name = self.file_data["build"]["dll"]
+        ndll_name = self.file_data["build"]["dll"].replace(".dll", ".Lux.dll")
+        self.log(f"Renaming DLL in {pdir} from: '{odll_name}' to '{ndll_name}'")
+        os.rename(os.path.join(pdir, odll_name), os.path.join(pdir, ndll_name))
 
         out_dir = os.path.join(output, f"{self.file_data["name"]}.{self.arch}")
 
