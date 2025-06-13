@@ -36,8 +36,8 @@ jobs:
             done
           done
       
-      - name: LS
-        run: ls .
+      - name: LS out
+        run: ls ./out
       
       - name: LS artifacts
         run: ls ./artifacts
@@ -67,7 +67,7 @@ jobs:
         with:
           tag_name: ${{ env.TAG_NAME }}
           name: ${{ env.TAG_NAME }}
-          files: ./artifacts/*.zip
+          files: ./out/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
