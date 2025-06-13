@@ -31,7 +31,7 @@ jobs:
             for sub_dir in "$platform_dir"/*; do
               if [ -d "$sub_dir" ]; then
                 sub_name=$(basename "$sub_dir")
-                zip -r "./out/${platform_name}-${sub_name}.zip" "$sub_dir"
+                zip -r "./out/${sub_name}.zip" "$sub_dir"
               fi
             done
           done
