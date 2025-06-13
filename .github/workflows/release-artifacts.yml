@@ -23,3 +23,21 @@ jobs:
 
       - name: List downloaded artifacts
         run: ls ./artifacts
+
+      - name: Create ZIP files for each artifact
+        run: |
+          for dir in ./artifacts/*; do
+            if [ -d "$dir" ]; then
+              zip -r "${dir}.zip" "$dir"
+            fi
+          done
+      
+      - name: Upload all artifacts to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.event.release.tag_name }}
+          name: ${{ github.event.release.tag_name }}
+          files: ./artifacts/*.zip
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
