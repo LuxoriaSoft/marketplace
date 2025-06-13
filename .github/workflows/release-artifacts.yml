@@ -31,12 +31,19 @@ jobs:
               zip -r "${dir}.zip" "$dir"
             fi
           done
-      
+
+      - name: Create Tag
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "LuxoriaAgent"
+          git tag -a "v${{ github.ref }}" -m "Luxoria Release v${{ github.ref }}"
+          git push origin "v${{ github.ref }}"
+
       - name: Upload all artifacts to GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.event.release.tag_name }}
-          name: ${{ github.event.release.tag_name }}
+          tag_name: ${{ github.ref }}
+          name: ${{ github.ref }}
           files: ./artifacts/*.zip
 
         env:
