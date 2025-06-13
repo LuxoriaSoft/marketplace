@@ -32,6 +32,7 @@ jobs:
             fi
           done
 
+      - uses: actions/checkout@v3
       - name: Create Tag
         run: |
           git config --local user.email "action@github.com"
