@@ -49,7 +49,7 @@ jobs:
           else
             echo "Creating tag ${TAG_NAME}."
             git tag -a "${TAG_NAME}" -m "Luxoria Release ${TAG_NAME}"
-            git push origin "${TAG_NAME}"
+            git push origin tag "${TAG_NAME}"
           fi
 
       - name: Upload all artifacts to GitHub Release
