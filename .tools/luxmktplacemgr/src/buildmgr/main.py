@@ -99,7 +99,7 @@ class BuildSystem:
         os.mkdir(out_dir)
         print(os.listdir(pdir))
 
-        pdir_tgt = os.path.join(out_dir, f"{self.file_data["name"]}.mod")
+        pdir_tgt = os.path.join(out_dir, f"{self.file_data["name"]}.luxmod")
         self.log(f"Copying dir (1/2) {pdir} to {pdir_tgt}")
         shutil.copytree(pdir, pdir_tgt)
         gdir_tgt = os.path.join(out_dir, self.file_data["build"]["dll"].replace(".dll", ""))
