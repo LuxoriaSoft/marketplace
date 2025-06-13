@@ -20,13 +20,20 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ./artifacts
+      
+      - name: Create output directory
+        run: mkdir -p ./out
 
-      - name: Create ZIP files for each artifact
+      - name: Create ZIP files for each subfolder in Modules-win-*
         run: |
-          for dir in ./artifacts/*; do
-            if [ -d "$dir" ]; then
-              zip -r "${dir}.zip" "$dir"
-            fi
+          for platform_dir in ./artifacts/Modules-win-*; do
+            platform_name=$(basename "$platform_dir")
+            for sub_dir in "$platform_dir"/*; do
+              if [ -d "$sub_dir" ]; then
+                sub_name=$(basename "$sub_dir")
+                zip -r "./out/${platform_name}-${sub_name}.zip" "$sub_dir"
+              fi
+            done
           done
       
       - name: LS
