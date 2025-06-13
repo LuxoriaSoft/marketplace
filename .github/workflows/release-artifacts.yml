@@ -28,6 +28,12 @@ jobs:
               zip -r "${dir}.zip" "$dir"
             fi
           done
+      
+      - name: LS
+        run: ls .
+      
+      - name: LS artifacts
+        run: ls ./artifacts
 
       - uses: actions/checkout@v3
 
