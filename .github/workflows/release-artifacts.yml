@@ -33,19 +33,24 @@ jobs:
           done
 
       - uses: actions/checkout@v3
+
+      - name: Extract Tag Name
+        id: extract_tag
+        run: echo "TAG_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
       - name: Create Tag
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "LuxoriaAgent"
-          git tag -a "v$(echo ${GITHUB_REF} | cut -d'/' -f3)" -m "Luxoria Release v$(echo ${GITHUB_REF} | cut -d'/' -f3)"
-          git push origin "v$$(echo ${GITHUB_REF} | cut -d'/' -f3)"
+          git tag -a "v${TAG_NAME}" -m "Luxoria Release v${TAG_NAME}"
+          git push origin "v${TAG_NAME}"
 
       - name: Upload all artifacts to GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: $(echo ${GITHUB_REF} | cut -d'/' -f3)
-          name: $(echo ${GITHUB_REF} | cut -d'/' -f3)
+          tag_name: v${{ env.TAG_NAME }}
+          name: v${{ env.TAG_NAME }}
           files: ./artifacts/*.zip
-
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
