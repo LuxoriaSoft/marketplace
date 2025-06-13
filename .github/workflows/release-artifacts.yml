@@ -67,7 +67,8 @@ jobs:
         with:
           tag_name: ${{ env.TAG_NAME }}
           name: ${{ env.TAG_NAME }}
-          files: ./out/*.*.zip
+          files: ./out/**
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
