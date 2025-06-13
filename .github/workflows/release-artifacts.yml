@@ -10,7 +10,7 @@ jobs:
     uses: ./.github/workflows/build-modules.yml
 
   upload-artifacts-to-release:
-    #needs: [exec-mods-build]
+    needs: [exec-mods-build]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -20,9 +20,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ./artifacts
-
-      - name: List downloaded artifacts
-        run: mkdir ./artifacts
 
       - name: Create ZIP files for each artifact
         run: |
