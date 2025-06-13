@@ -10,7 +10,7 @@ jobs:
     uses: ./.github/workflows/build-modules.yml
 
   upload-artifacts-to-release:
-    needs: [exec-mods-build]
+    #needs: [exec-mods-build]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -37,14 +37,14 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "LuxoriaAgent"
-          git tag -a "v${{ github.ref }}" -m "Luxoria Release v${{ github.ref }}"
-          git push origin "v${{ github.ref }}"
+          git tag -a "v$(echo ${GITHUB_REF} | cut -d'/' -f3)" -m "Luxoria Release v$(echo ${GITHUB_REF} | cut -d'/' -f3)"
+          git push origin "v$$(echo ${GITHUB_REF} | cut -d'/' -f3)"
 
       - name: Upload all artifacts to GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          name: ${{ github.ref }}
+          tag_name: $(echo ${GITHUB_REF} | cut -d'/' -f3)
+          name: $(echo ${GITHUB_REF} | cut -d'/' -f3)
           files: ./artifacts/*.zip
 
         env:
