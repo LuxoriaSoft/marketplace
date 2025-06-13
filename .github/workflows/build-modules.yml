@@ -1,9 +1,7 @@
 name: Marketplace Module Builder
 
 on:
-  push:
-    branches:
-      - v*
+  workflow_call:
 
 jobs:
   build-and-upload:
@@ -23,24 +21,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          lfs: 'true'
+          lfs: "true"
 
       # Set up the .NET SDK (version 9.x)
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '9.x'
-      
+          dotnet-version: "9.x"
+
       # Set up Python 3.12
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       # Set up MSBuild for Windows build environment
       - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v1.0.2
-            
+
       # Build the main Luxoria.App solution
       - name: Build Luxoria.App
         run: |
@@ -69,7 +67,7 @@ jobs:
       - name: Build modules
         run: C:\Users\runneradmin\.local\bin\poetry run build ${{ matrix.platform }} ../../Modules
         working-directory: ./.tools/luxmktplacemgr
-      
+
       # Archive builds
       - name: Upload artifacts
         uses: actions/upload-artifact@v4

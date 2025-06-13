@@ -1,0 +1,25 @@
+name: Artifacts to Release
+
+on:
+  push:
+    branches:
+      - v*
+
+jobs:
+  exec-mods-build:
+    uses: ./.github/workflows/build-modules.yml
+
+  upload-artifacts-to-release:
+    needs: [exec-mods-build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: List downloaded artifacts
+        run: ls ./artifacts
