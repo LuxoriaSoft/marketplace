@@ -48,8 +48,8 @@ jobs:
       - name: Upload all artifacts to GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ env.TAG_NAME }}
-          name: v${{ env.TAG_NAME }}
+          tag_name: ${{ env.TAG_NAME }}
+          name: ${{ env.TAG_NAME }}
           files: ./artifacts/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
