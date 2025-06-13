@@ -22,7 +22,7 @@ jobs:
           path: ./artifacts
 
       - name: List downloaded artifacts
-        run: ls ./artifacts
+        run: mkdir ./artifacts
 
       - name: Create ZIP files for each artifact
         run: |
