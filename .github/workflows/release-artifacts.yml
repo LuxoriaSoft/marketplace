@@ -16,6 +16,26 @@ jobs:
       contents: write
 
     steps:
+      - uses: actions/checkout@v3
+
+      - name: Extract Tag Name
+        id: extract_tag
+        run: echo "TAG_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
+      - name: Create Tag if it does NOT exist
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "LuxoriaAgent"
+
+          # Check if tag exists remotely
+          if git ls-remote --tags origin | grep -q "refs/tags/${TAG_NAME}$"; then
+            echo "Tag ${TAG_NAME} already exists. Skipping tag creation."
+          else
+            echo "Creating tag ${TAG_NAME}."
+            git tag -a "${TAG_NAME}" -m "Luxoria Release ${TAG_NAME}"
+            git push origin tag "${TAG_NAME}"
+          fi
+      
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
@@ -41,26 +61,6 @@ jobs:
       
       - name: LS artifacts
         run: ls ./artifacts
-
-      - uses: actions/checkout@v3
-
-      - name: Extract Tag Name
-        id: extract_tag
-        run: echo "TAG_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
-
-      - name: Create Tag if it does NOT exist
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "LuxoriaAgent"
-
-          # Check if tag exists remotely
-          if git ls-remote --tags origin | grep -q "refs/tags/${TAG_NAME}$"; then
-            echo "Tag ${TAG_NAME} already exists. Skipping tag creation."
-          else
-            echo "Creating tag ${TAG_NAME}."
-            git tag -a "${TAG_NAME}" -m "Luxoria Release ${TAG_NAME}"
-            git push origin tag "${TAG_NAME}"
-          fi
 
       - name: Upload all artifacts to GitHub Release
         uses: softprops/action-gh-release@v1
