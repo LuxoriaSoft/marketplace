@@ -52,6 +52,7 @@ jobs:
               if [ -d "$sub_dir" ]; then
                 sub_name=$(basename "$sub_dir")
                 zip -r "out/${sub_name}.zip" "$sub_dir"
+                cp *.md out/${sub_name}.md
               fi
             done
           done
