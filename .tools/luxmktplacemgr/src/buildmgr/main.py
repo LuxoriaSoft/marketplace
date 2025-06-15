@@ -111,7 +111,8 @@ class BuildSystem:
     def copy_brochure(self, output: str):
         """Copies brochure and moves it to out directory"""
         brochure_path = os.path.join(self.dir, self.file_data["brochure"])
-        final_dest = os.path.join(output, f"{self.file_data["name"]}.readme.md")
+        out_dir = os.path.join(output, f"{self.file_data["name"]}.{self.arch}")
+        final_dest = os.path.join(out_dir, f"{self.file_data["name"]}.readme.md")
 
         self.log(f"Copying brochure {brochure_path} to {final_dest}")
         shutil.copyfile(brochure_path, final_dest)
