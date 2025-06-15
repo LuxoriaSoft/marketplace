@@ -16,10 +16,57 @@ jobs:
       contents: write
 
     steps:
+      - uses: actions/checkout@v3
+
+      - name: Extract Tag Name
+        id: extract_tag
+        run: echo "TAG_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
+      - name: Create Tag if it does NOT exist
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "LuxoriaAgent"
+
+          # Check if tag exists remotely
+          if git ls-remote --tags origin | grep -q "refs/tags/${TAG_NAME}$"; then
+            echo "Tag ${TAG_NAME} already exists. Skipping tag creation."
+          else
+            echo "Creating tag ${TAG_NAME}."
+            git tag -a "${TAG_NAME}" -m "Luxoria Release ${TAG_NAME}"
+            git push origin tag "${TAG_NAME}"
+          fi
+      
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: ./artifacts
+      
+      - name: Create output directory
+        run: mkdir -p out
 
-      - name: List downloaded artifacts
+      - name: Create ZIP files for each subfolder in Modules-win-*
+        run: |
+          for platform_dir in ./artifacts/Modules-win-*; do
+            platform_name=$(basename "$platform_dir")
+            for sub_dir in "$platform_dir"/*; do
+              if [ -d "$sub_dir" ]; then
+                sub_name=$(basename "$sub_dir")
+                zip -r "out/${sub_name}.zip" "$sub_dir"
+              fi
+            done
+          done
+      
+      - name: LS out
+        run: ls out
+      
+      - name: LS artifacts
         run: ls ./artifacts
+
+      - name: Upload all artifacts to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          name: ${{ env.TAG_NAME }}
+          files: out/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
