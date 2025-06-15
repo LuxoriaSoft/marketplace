@@ -52,7 +52,6 @@ jobs:
               if [ -d "$sub_dir" ]; then
                 sub_name=$(basename "$sub_dir")
                 zip -r "out/${sub_name}.zip" "$sub_dir"
-                cp "$sub_dir"/*.md "out/${sub_name}.md"
               fi
             done
           done
@@ -68,6 +67,6 @@ jobs:
         with:
           tag_name: ${{ env.TAG_NAME }}
           name: ${{ env.TAG_NAME }}
-          files: out/*.zip
+          files: out/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
