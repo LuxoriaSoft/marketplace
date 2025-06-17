@@ -46,16 +46,20 @@ jobs:
 
       - name: Create ZIP files for each subfolder in Modules-win-*
         run: |
+          out_path=$(realpath out)
           for platform_dir in ./artifacts/Modules-win-*; do
             platform_name=$(basename "$platform_dir")
             for sub_dir in "$platform_dir"/*; do
               if [ -d "$sub_dir" ]; then
                 sub_name=$(basename "$sub_dir")
                 cp ${sub_dir}/*.md out
-                zip -r "out/${sub_name}.zip" "$sub_dir"
-              fi
+                (
+                cd $sub_dir
+                zip -r "${out_path}/${sub_name}.zip" .
+                )
+                fi
+                done
             done
-          done
       
       - name: LS out
         run: ls out
