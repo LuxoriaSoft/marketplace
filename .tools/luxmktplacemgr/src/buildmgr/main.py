@@ -118,6 +118,8 @@ class BuildSystem:
             tail = "\n".join((proc.stderr or "").splitlines()[-20:])
             if tail:
                 self.log(f"stderr (last 20 lines):\n{tail}")
+            self.log(f"stdout:\n{proc.stdout}")
+            self.log(f"stderr:\n{proc.stderr}")
             self.log(f"Full log saved as {log_filename}")
             return 1
 
