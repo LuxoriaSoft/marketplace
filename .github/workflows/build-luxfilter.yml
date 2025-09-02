@@ -1,0 +1,111 @@
+name: LuxFilter Module Builder
+
+on:
+  workflow_call:
+
+jobs:
+  build-and-upload:
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        configuration: [Release]
+        platform: [win-x64, win-x86, win-arm64]
+    
+    env:
+      Solution_Name: Luxoria.App.sln
+      Framework_Version: net9.0-windows10.0.26100.0
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          lfs: "true"
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.x"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      
+      - name: Setup MSBuild.exe
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build Luxoria.App
+        run: |
+          if ("${{ matrix.platform }}" -eq "win-x86") {
+            $platformTarget = "x86"
+          } elseif ("${{ matrix.platform }}" -eq "win-x64") {
+            $platformTarget = "x64"
+          } elseif ("${{ matrix.platform }}" -eq "win-arm64") {
+            $platformTarget = "ARM64"
+          } else {
+            throw "Unknown platform: ${{ matrix.platform }}"
+          }
+          dotnet build Luxoria.App/Luxoria.App.sln --no-incremental -p:PackOnBuild=false -maxcpucount:1 -c ${{ matrix.configuration }} -r ${{ matrix.platform }} -p:PlatformTarget=$platformTarget
+        shell: pwsh
+      
+      - name: Install Luxoria LuxFilter Model requirements
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r Modules/LuxFilter/LuxFilter.Algorithms/Algorithms/ColorVisualAesthetics/CLIPModel/requirements.txt
+          python Modules/LuxFilter/LuxFilter.Algorithms/Algorithms/ColorVisualAesthetics/CLIPModel/onnx_export.py Modules/LuxFilter/LuxFilter.Algorithms/Algorithms/ColorVisualAesthetics/CLIPModel/
+        shell: pwsh
+
+      - name: Build LuxFilter
+        run: dotnet publish Modules/LuxFilter/LuxFilter/LuxFilter.csproj -c ${{ matrix.configuration }} -r ${{ matrix.platform }}
+
+      - name: Rename LuxFilter.dll
+        run: |
+          $framework = "${{ env.Framework_Version }}"
+          $config = "${{ matrix.configuration }}"
+          $platform = "${{ matrix.platform }}"
+          $publishDir = "Modules/LuxFilter/LuxFilter/bin/$config/$framework/$platform/publish"
+          $sourcePath = Join-Path $publishDir "LuxFilter.dll"
+          $newName = "LuxFilter.Lux.dll"
+
+          if (!(Test-Path $publishDir)) {
+            throw "Publish directory not found: $publishDir"
+          }
+          if (!(Test-Path $sourcePath)) {
+            throw "Source DLL not found: $sourcePath"
+          }
+          Rename-Item -Path $sourcePath -NewName $newName -ErrorAction Stop
+          Write-Host "Renamed to: $(Join-Path $publishDir $newName)"
+        shell: pwsh
+
+      - name: Prepare LuxFilter
+        run: |
+          $framework = "${{ env.Framework_Version }}"
+          $config = "${{ matrix.configuration }}"
+          $platform = "${{ matrix.platform }}"
+          $moduleName = "LuxFilter"
+
+          $rootPath   = "Modules/$moduleName/$moduleName/bin/$config/$framework/$platform"
+          $publishDir = Join-Path $rootPath "publish"
+          $gdir       = Join-Path $rootPath $moduleName
+
+          if (!(Test-Path $publishDir)) { throw "Publish dir missing: $publishDir" }
+          if (!(Test-Path $gdir))       { throw "Module dir missing: $gdir" }
+
+          $outDir = "artifacts/$moduleName.$platform"
+          Write-Host "Creating folder $outDir"
+          New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+
+          $pdirTgt = Join-Path $outDir "$moduleName.luxmod"
+          Write-Host "Copying dir (1/2) $publishDir -> $pdirTgt"
+          if (Test-Path $pdirTgt) { Remove-Item -Recurse -Force $pdirTgt }
+          Copy-Item -Recurse -Force $publishDir $pdirTgt
+
+          $gdirTgt = Join-Path $outDir $moduleName
+          Write-Host "Copying dir (2/2) $gdir -> $gdirTgt"
+          if (Test-Path $gdirTgt) { Remove-Item -Recurse -Force $gdirTgt }
+          Copy-Item -Recurse -Force $gdir $gdirTgt
+
+          Write-Host "Contents of $outDir:"
+          Get-ChildItem -Recurse $outDir
+        shell: pwsh

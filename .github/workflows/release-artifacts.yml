@@ -8,9 +8,11 @@ on:
 jobs:
   exec-mods-build:
     uses: ./.github/workflows/build-modules.yml
-
+  exec-luxfilter-build:
+    uses: ./.github/workflows/build-luxfilter.yml
+  
   upload-artifacts-to-release:
-    needs: [exec-mods-build]
+    needs: [exec-mods-build, exec-luxfilter-build]
     runs-on: ubuntu-latest
     permissions:
       contents: write
