@@ -106,6 +106,6 @@ jobs:
           if (Test-Path $gdirTgt) { Remove-Item -Recurse -Force $gdirTgt }
           Copy-Item -Recurse -Force $gdir $gdirTgt
 
-          Write-Host "Contents of $outDir:"
+          Write-Host "Contents:"
           Get-ChildItem -Recurse $outDir
         shell: pwsh
