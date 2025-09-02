@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "LuxEditor": {
+      "commandName": "Project"
+    },
+    "Profile 1": {
+      "commandName": "Executable",
+      "executablePath": "D:\\Program Files\\Python311\\python.exe",
+      "commandLineArgs": "buildsystem.py",
+      "workingDirectory": "C:\\Users\\noahg\\Desktop\\Github\\Luxoria\\Modules\\LuxEditor"
+    }
+  }
+}
