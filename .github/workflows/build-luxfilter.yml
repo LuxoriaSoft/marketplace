@@ -109,3 +109,37 @@ jobs:
           Write-Host "Contents:"
           Get-ChildItem -Recurse $outDir
         shell: pwsh
+
+      - name: Zip LuxFilter
+        run: |
+          $moduleName = "LuxFilter"
+          $platform   = "${{ matrix.platform }}"
+          $outRoot    = "artifacts"
+          $srcDir     = Join-Path $outRoot "$moduleName.$platform"
+
+          if (!(Test-Path $srcDir)) { throw "Artifacts source dir missing: $srcDir" }
+
+          $arch = switch -Regex ($platform) {
+            'x64'   { 'x64';   break }
+            'x86'   { 'x86';   break }
+            'arm64' { 'arm64'; break }
+            default { throw "Unknown platform '$platform' — expected x64/x86/arm64" }
+          }
+
+          $zipName = "$moduleName.$arch.zip"
+          $zipPath = Join-Path $outRoot $zipName
+
+          if (Test-Path $zipPath) { Remove-Item -Force $zipPath }
+
+          Write-Host "Zipping $srcDir -> $zipPath"
+          Compress-Archive -Path (Join-Path $srcDir '*') -DestinationPath $zipPath -Force
+          Write-Host "Created: $zipPath"
+        shell: pwsh
+
+      # Archive builds
+      - name: Upload LuxFilter zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: LuxFilter-${{ matrix.platform }}
+          path: artifacts/LuxFilter.*.zip
+

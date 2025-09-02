@@ -63,6 +63,15 @@ jobs:
                 done
             done
       
+      - name: Collect LuxFilter zips
+        run: |
+          shopt -s globstar nullglob
+          mkdir -p out
+          # Copy LuxFilter.x64/x86/arm64.zip created by the Windows job
+          for z in ./artifacts/**/LuxFilter.*.zip; do
+            cp "$z" out/
+          done
+
       - name: LS out
         run: ls out
       
