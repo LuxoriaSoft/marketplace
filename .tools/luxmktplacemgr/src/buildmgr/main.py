@@ -59,71 +59,70 @@ class BuildSystem:
         print("[\\]\t" + content)
 
     def build(self):
-    """Build the solution using configuration, with rich error logs."""
-    # --- Config & compatibility ---
-    build = self.file_data['build']
-    runtimes = build['runtimes']
-    archs_list = list(runtimes.keys()) if isinstance(runtimes, dict) else runtimes
-    self.log(f"Loading configuration... defined by archs {archs_list}")
-    self.log(f"Checking compatibility with {self.arch}")
-    if self.arch not in runtimes:
-        self.log("err: Module not compatible with the specified architecture !")
-        self.log("err: Build cancelled !")
-        return 1
+        """Build the solution using configuration, with rich error logs"""
+        build = self.file_data['build']
+        runtimes = build['runtimes']
+        archs_list = list(runtimes.keys()) if isinstance(runtimes, dict) else runtimes
+        self.log(f"Loading configuration... defined by archs {archs_list}")
+        self.log(f"Checking compatibility with {self.arch}")
+        if self.arch not in runtimes:
+            self.log("err: Module not compatible with the specified architecture !")
+            self.log("err: Build cancelled !")
+            return 1
 
-    DOTNET = DOTNET_EXECUTOR
-    csproj = build['csproj']
-    config = build['config']
-    rid = runtimes[self.arch]
-    workdir = Path(self.dir)
+        DOTNET = DOTNET_EXECUTOR
+        csproj = build['csproj']
+        config = build['config']
+        rid = runtimes[self.arch]
+        workdir = Path(self.dir)
 
-    cmd = [DOTNET, "publish", csproj, "-c", config, "-r", rid]
+        cmd = [DOTNET, "publish", csproj, "-c", config, "-r", rid]
 
-    self.log(f"Executing: {shlex.join(cmd)} in [{workdir.resolve()}]")
+        self.log(f"Executing: {shlex.join(cmd)} in [{workdir.resolve()}]")
 
-    try:
-        proc = subprocess.run(
-            cmd,
-            cwd=str(workdir),
-            text=True,
-            capture_output=True,
-            shell=False
-        )
-    except FileNotFoundError as fnf:
-        self.log(f"err: could not execute '{DOTNET}': {fnf}")
-        return 1
-    except Exception as ex:
-        self.log(f"err: unexpected failure launching process: {ex}")
-        return 1
+        try:
+            proc = subprocess.run(
+                cmd,
+                cwd=str(workdir),
+                text=True,
+                capture_output=True,
+                shell=False
+            )
+        except FileNotFoundError as fnf:
+            self.log(f"err: could not execute '{DOTNET}': {fnf}")
+            return 1
+        except Exception as ex:
+            self.log(f"err: unexpected failure launching process: {ex}")
+            return 1
 
-    log_filename = f"{self.file_data['name']}.{self.arch}.log"
-    try:
-        with open(log_filename, "w", encoding="utf-8", newline="") as f:
-            f.write("=== COMMAND ===\n")
-            f.write(shlex.join(cmd) + "\n\n")
-            f.write("=== CWD ===\n")
-            f.write(str(workdir.resolve()) + "\n\n")
-            f.write("=== EXIT CODE ===\n")
-            f.write(str(proc.returncode) + "\n\n")
-            f.write("=== STDOUT ===\n")
-            f.write(proc.stdout or "")
-            f.write("\n\n=== STDERR ===\n")
-            f.write(proc.stderr or "")
-            f.write("\n")
-    except OSError as file_err:
-        self.log(f"err: could not write log file '{log_filename}': {file_err}")
+        log_filename = f"{self.file_data['name']}.{self.arch}.log"
+        try:
+            with open(log_filename, "w", encoding="utf-8", newline="") as f:
+                f.write("=== COMMAND ===\n")
+                f.write(shlex.join(cmd) + "\n\n")
+                f.write("=== CWD ===\n")
+                f.write(str(workdir.resolve()) + "\n\n")
+                f.write("=== EXIT CODE ===\n")
+                f.write(str(proc.returncode) + "\n\n")
+                f.write("=== STDOUT ===\n")
+                f.write(proc.stdout or "")
+                f.write("\n\n=== STDERR ===\n")
+                f.write(proc.stderr or "")
+                f.write("\n")
+        except OSError as file_err:
+            self.log(f"err: could not write log file '{log_filename}': {file_err}")
 
-    if proc.returncode != 0:
-        self.log("err: executing command failed.")
-        self.log(f"exit code: {proc.returncode}")
-        tail = "\n".join((proc.stderr or "").splitlines()[-20:])
-        if tail:
-            self.log(f"stderr (last 20 lines):\n{tail}")
-        self.log(f"Full log saved as {log_filename}")
-        return 1
+        if proc.returncode != 0:
+            self.log("err: executing command failed.")
+            self.log(f"exit code: {proc.returncode}")
+            tail = "\n".join((proc.stderr or "").splitlines()[-20:])
+            if tail:
+                self.log(f"stderr (last 20 lines):\n{tail}")
+            self.log(f"Full log saved as {log_filename}")
+            return 1
 
-    self.log(f"Success. Full log saved as {log_filename}")
-    return 0
+        self.log(f"Success. Full log saved as {log_filename}")
+        return 0
     
     def prepare_export(self, output: str):
         """Renames dll from Name.dll to Name.Lux.dll & Moves bin folder to target folder (output)"""
