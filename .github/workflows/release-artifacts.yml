@@ -72,6 +72,10 @@ jobs:
             cp "$z" out/
           done
 
+      - name: Integrate LuxFilter official readme
+        run: |
+          echo "#LuxFilter" > out/LuxFilter.readme.md
+
       - name: LS out
         run: ls out
       
