@@ -1,0 +1,30 @@
+<Page
+    x:Class="LuxEditor.Components.CollectionExplorer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LuxEditor"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local1="using:LuxEditor.Components"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel x:Name="HeaderBar"
+            FlowDirection="RightToLeft"
+            Orientation="Horizontal"
+            Padding="4"
+            Spacing="5"
+            Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
+
+        </StackPanel>
+
+        <Grid Grid.Row="1" x:Name="RootGrid" Background="Transparent"/>
+    </Grid>
+
+</Page>
