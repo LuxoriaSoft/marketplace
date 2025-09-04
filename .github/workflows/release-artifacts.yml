@@ -74,7 +74,7 @@ jobs:
 
       - name: Integrate LuxFilter official readme
         run: |
-          echo "#LuxFilter" > out/LuxFilter.readme.md
+          curl https://raw.githubusercontent.com/LuxoriaSoft/Luxoria/66aa81160af3266b56d51eb7881f3ec96f4c1300/Modules/LuxFilter/README.md > out/LuxFilter.readme.md
 
       - name: LS out
         run: ls out
