@@ -1,0 +1,102 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>LuxFilter</RootNamespace>
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+    <UseWinUI>true</UseWinUI>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <WindowsSdkPackageVersion>10.0.26100.57</WindowsSdkPackageVersion>
+	<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+	<GenerateLibraryLayout>true</GenerateLibraryLayout>
+  </PropertyGroup>
+
+  <PropertyGroup>
+	<Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<None Remove="Components\CollectionExplorer.xaml" />
+	<None Remove="Components\AssetViewer.xaml" />
+	<None Remove="Components\FilterExplorer.xaml" />
+	<None Remove="Components\FilterToolBox.xaml" />
+	<None Remove="Components\FlagsComponent.xaml" />
+	<None Remove="Components\RatingComponent.xaml" />
+	<None Remove="Components\ScoreViewer.xaml" />
+	<None Remove="Components\ToolBox.xaml" />
+  </ItemGroup>
+	
+	
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250205002" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LuxFilter.Algorithms\LuxFilter.Algorithms.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<PackageReference Include="SkiaSharp" Version="3.116.1" />
+	<PackageReference Include="Luxoria.SDK" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+		<ProjectReference Include="..\..\..\Luxoria.App\Luxoria.GModules\Luxoria.GModules.csproj" />
+		<ProjectReference Include="..\..\..\Luxoria.App\Luxoria.Modules\Luxoria.Modules.csproj" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Components\FilterToolBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Components\FilterExplorer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Components\ScoreViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Components\FlagsComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Components\ToolBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Components\RatingComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Components\AssetViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Components\CollectionExplorer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Logics\" />
+  </ItemGroup>
+  
+</Project>
